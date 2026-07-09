@@ -1,87 +1,29 @@
-pipeline {
-    agent any
-
-    tools {
-        maven 'Maven_System'
+node {
+    stage('Checkout') {
+        git branch: 'main', url: 'https://github.com/amantiwarie/DevopsDemo.git'
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/amantiwarie/DevopsDemo.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Deploy to Wildfly') {
-            steps {
-                sh 'cp target/currency-converter.war /opt/wildfly/standalone/deployments/'
-            }
+    stage('Build') {
+        withEnv(["PATH+MAVEN=/usr/share/maven/bin"]) {
+            sh 'mvn clean package'
         }
     }
 
-    post {
-        success {
-            emailext (
-                subject: "SUCCESS: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-                body: "Good news! Build ${env.BUILD_NUMBER} succeeded.\n\nCheck console: ${env.BUILD_URL}",
-                to: 'youremail@example.com'
-            )
-        }
-        failure {
-            emailext (
-                subject: "FAILED: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-                body: "Build ${env.BUILD_NUMBER} failed.\n\nCheck console: ${env.BUILD_URL}",
-                to: 'youremail@example.com'
-            )
-        }
+    stage('Deploy to Wildfly') {
+        sh 'cp target/currency-converter.war /opt/wildfly/standalone/deployments/'
     }
-}pipeline {
-     agent any
+}
 
-     tools {
-         maven 'Maven_System'
-     }
-
-     stages {
-         stage('Checkout') {
-             steps {
-                 git branch: 'main', url: 'https://github.com/amantiwarie/DevopsDemo.git'
-             }
-         }
-
-         stage('Build') {
-             steps {
-                 sh 'mvn clean package'
-             }
-         }
-
-         stage('Deploy to Wildfly') {
-             steps {
-                 sh 'cp target/currency-converter.war /opt/wildfly/standalone/deployments/'
-             }
-         }
-     }
-
-     post {
-         success {
-             emailext (
-                 subject: "SUCCESS: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-                 body: "Good news! Build ${env.BUILD_NUMBER} succeeded.\n\nCheck console: ${env.BUILD_URL}",
-                 to: 'attiwari261@gmail.com'
-             )
-         }
-         failure {
-             emailext (
-                 subject: "FAILED: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-                 body: "Build ${env.BUILD_NUMBER} failed.\n\nCheck console: ${env.BUILD_URL}",
-                 to: 'attiwari261@gmail.com'
-             )
-         }
-     }
- }
+if (currentBuild.currentResult == 'SUCCESS') {
+    emailext (
+            subject: "SUCCESS: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
+            body: "Good news! Build ${env.BUILD_NUMBER} succeeded.\n\nCheck console: ${env.BUILD_URL}",
+            to: 'attiwari261@gmail.com'
+    )
+} else {
+    emailext (
+            subject: "FAILED: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
+            body: "Build ${env.BUILD_NUMBER} failed.\n\nCheck console: ${env.BUILD_URL}",
+            to: 'attiwari261@gmail.com'
+    )
+}
