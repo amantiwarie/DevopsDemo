@@ -20,6 +20,7 @@ public class CurrencyController {
         RATES_FROM_INR.put("EUR", 0.011);
         RATES_FROM_INR.put("GBP", 0.0095);
         RATES_FROM_INR.put("JPY", 1.73);
+        RATES_FROM_INR.put("AUD", 0.018);
     }
 
     @GetMapping("/")
