@@ -17,13 +17,15 @@ node {
 if (currentBuild.currentResult == 'SUCCESS') {
     emailext (
             subject: "SUCCESS: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-            body: "Good news! Build ${env.BUILD_NUMBER} succeeded.\n\nCheck console: ${env.BUILD_URL}",
-            to: 'attiwari261@gmail.com'
+            body: "Good news! Build ${env.BUILD_NUMBER} succeeded.\n\nCheck console: ${env.BUILD_URL}\n\nFull build log is attached.",
+            to: 'attiwari261@gmail.com',
+            attachLog: true
     )
 } else {
     emailext (
             subject: "FAILED: Build #${env.BUILD_NUMBER} - ${env.JOB_NAME}",
-            body: "Build ${env.BUILD_NUMBER} failed.\n\nCheck console: ${env.BUILD_URL}",
-            to: 'attiwari261@gmail.com'
+            body: "Build ${env.BUILD_NUMBER} failed.\n\nCheck console: ${env.BUILD_URL}\n\nFull build log is attached for debugging.",
+            to: 'attiwari261@gmail.com',
+            attachLog: true
     )
 }
