@@ -22,6 +22,8 @@ public class CurrencyController {
         RATES_FROM_INR.put("JPY", 1.73);
         RATES_FROM_INR.put("PNR", 0.50);
         RATES_FROM_INR.put("Psss", 0.90);
+        RATES_FROM_INR.put("pounds", 1.5);
+
 
     }
 
